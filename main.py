@@ -5,6 +5,7 @@ from PIL import  Image, ImageDraw, ImageFont
 from random import  randint
 OUTPUT_PATH=r".\static\done_watermarking\image_with_watermark.png"
 WATERMARK_TEXT="Official_Beast"
+original_img_path=""
 window = Tk()
 window.minsize(width=500,height=500)
 window.title("Image-Watermarking")
@@ -19,7 +20,8 @@ window.title("Image-Watermarking")
 def browse_file():
     file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
     if file_path:
-        insert_watermark(file_path,OUTPUT_PATH,watermark_text=WATERMARK_TEXT)
+        global original_img_path
+        original_img_path=file_path
 
 
 
@@ -48,6 +50,7 @@ def insert_watermark(input_image_path,output_image_path,watermark_text,font_size
     for i in range(6):
         width_plus = randint(0, 6)
         height_plus = randint(0, 6)
+        print(width_plus, height_plus)
         # Calculate the position to center the watermark on the image
         x = (original_image.width + width_plus - text_size[2]) // 2
         y = (original_image.height + height_plus - text_size[3] ) // 2
@@ -82,11 +85,12 @@ button=Button(text="Locate📁",command=browse_file)
 button.place(relx=0.2,rely=0.7, anchor=CENTER)
 
 
-button=Button(text="Convert➡️")
+button=Button(text="Convert➡️", command=lambda :insert_watermark(original_img_path,OUTPUT_PATH,WATERMARK_TEXT))
 button.place(relx=0.7,rely=0.7, anchor=CENTER)
 
 
 # **********Logic*********
+
 
 
 
