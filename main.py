@@ -1,37 +1,28 @@
-#Create Basic Tkinter Gui
-from tkinter import  *
+# Import necessary libraries
+from tkinter import *
 from tkinter import filedialog
-from PIL import  Image, ImageDraw, ImageFont
-from random import  randint
-OUTPUT_PATH=r".\static\done_watermarking\image_with_watermark.png"
-WATERMARK_TEXT="Official_Beast"
-original_img_path=""
+from PIL import Image, ImageDraw, ImageFont
+from random import randint
+
+# Set the output path and watermark text
+OUTPUT_PATH = r".\static\done_watermarking\image_with_watermark.png"
+WATERMARK_TEXT = "Official_Beast"
+original_img_path = ""
+
+# Create the main Tkinter window
 window = Tk()
-window.minsize(width=500,height=500)
+window.minsize(width=500, height=500)
 window.title("Image-Watermarking")
 
-#input=  a image
-
-#output=  a image with my water mark
-
-
-
-#Add a file locator and load that image in variable
+# Function to browse and select an image file
 def browse_file():
     file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
     if file_path:
         global original_img_path
-        original_img_path=file_path
+        original_img_path = file_path
 
-
-
-
-
-
-
-#try to find a way to insert the
-# watermark in Image
-def insert_watermark(input_image_path,output_image_path,watermark_text,font_size=36):
+# Function to insert watermark into the image
+def insert_watermark(input_image_path, output_image_path, watermark_text, font_size=36):
     # Open the original image
     original_image = Image.open(input_image_path)
 
@@ -52,48 +43,29 @@ def insert_watermark(input_image_path,output_image_path,watermark_text,font_size
         height_plus = randint(0, 6)
         print(width_plus, height_plus)
         # Calculate the position to center the watermark on the image
-        x = (original_image.width + width_plus - text_size[2]) // 2
-        y = (original_image.height + height_plus - text_size[3] ) // 2
-
+        x = (original_image.width - text_size[2]) // 2
+        y = (original_image.height  - text_size[3] ) // 2
         # Draw the watermark text on the transparent image
-        draw.text((x, y), watermark_text, font=font, fill=(255, 255, 255, 128))
+        draw.text((x+width_plus, y+height_plus), watermark_text, font=font, fill=(255, 255, 255, 128))
 
     # Composite the original image and the watermark
     watermarked_image = Image.alpha_composite(original_image.convert("RGBA"), watermark)
 
     # Save the result
-    watermarked_image.save(output_image_path,format="png")
+    watermarked_image.save(output_image_path, format="png")
 
+# UI + Logic
+image_path = PhotoImage(file="static/title_image/image_watermarking.png")
+image_label = Label(window, image=image_path)
+image_label.place(relx=0.5, rely=0.4, anchor=CENTER)
 
+# Browse button to locate an image
+button = Button(text="Locate📁", command=browse_file)
+button.place(relx=0.2, rely=0.9, anchor=CENTER)
 
-#after that try to find if u can  5
+# Convert button to apply watermark and save the image
+button = Button(text="Convert➡️", command=lambda: insert_watermark(original_img_path, OUTPUT_PATH, WATERMARK_TEXT))
+button.place(relx=0.7, rely=0.9, anchor=CENTER)
 
-
-
-
-
-
-#*************UI**************
-
-image_path= PhotoImage(file="static/title_image/image_watermarking.png")
-image_label= Label(window,image=image_path)
-image_label.place(relx=0.5,rely=0.4,anchor= CENTER)
-
-
-
-button=Button(text="Locate📁",command=browse_file)
-button.place(relx=0.2,rely=0.7, anchor=CENTER)
-
-
-button=Button(text="Convert➡️", command=lambda :insert_watermark(original_img_path,OUTPUT_PATH,WATERMARK_TEXT))
-button.place(relx=0.7,rely=0.7, anchor=CENTER)
-
-
-# **********Logic*********
-
-
-
-
-
-
+# Start the main loop
 mainloop()
