@@ -15,9 +15,11 @@ window.minsize(width=500, height=500)
 window.title("Image-Watermarking")
 
 # Function to browse and select an image file
-def browse_file():
+def browse_file(file_path_display):
     file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
     if file_path:
+        file_path_display.insert(5,string=file_path)
+
         global original_img_path
         original_img_path = file_path
 
@@ -59,13 +61,22 @@ image_path = PhotoImage(file="static/title_image/image_watermarking.png")
 image_label = Label(window, image=image_path)
 image_label.place(relx=0.5, rely=0.4, anchor=CENTER)
 
+file_path_display=Entry()
+file_path_display.config(width=15)
+file_path_display.place(relx=0.2,rely=0.85,anchor=CENTER)
+
+
+
 # Browse button to locate an image
-button = Button(text="Locate📁", command=browse_file)
+button = Button(text="Locate Image 📁", command= lambda: browse_file(file_path_display))
 button.place(relx=0.2, rely=0.9, anchor=CENTER)
 
 # Convert button to apply watermark and save the image
-button = Button(text="Convert➡️", command=lambda: insert_watermark(original_img_path, OUTPUT_PATH, WATERMARK_TEXT))
+button = Button(text="Convert ➡️", command=lambda: insert_watermark(original_img_path, OUTPUT_PATH, WATERMARK_TEXT))
 button.place(relx=0.7, rely=0.9, anchor=CENTER)
+
+
+
 
 # Start the main loop
 mainloop()
